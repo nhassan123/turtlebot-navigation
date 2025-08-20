@@ -9,6 +9,7 @@ endif()
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
@@ -26,7 +27,11 @@ if(BUILD_TESTING)
 endif()
 
 add_executable(turtle_controller src/controller.cpp)
-ament_target_dependencies(turtle_controller rclcpp geometry_msgs)
+ament_target_dependencies(turtle_controller 
+  rclcpp 
+  geometry_msgs
+  sensor_msgs
+)
 
 install(TARGETS
   turtle_controller
