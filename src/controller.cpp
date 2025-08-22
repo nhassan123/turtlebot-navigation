@@ -28,20 +28,24 @@ public:
 private:
     void scan_callback(const sensor_msgs::msg::LaserScan::SharedPtr msg) {
         int num_ranges = msg->ranges.size();
-        int mid_index = num_ranges / 2;
 
-        // Check 45 degree range around the front
-        double angle_range = 45.0 * M_PI / 180.0; // 15 degrees in radians
+        // Check 15 degree range around the front
+        double angle_range = 15.0 * M_PI / 180.0; // 15 degrees in radians
         int samples_per_angle = static_cast<int>(angle_range / msg->angle_increment);
 
-        int start_index = std::max(0, mid_index - samples_per_angle);
-        int end_index = std::min(mid_index + samples_per_angle, num_ranges - 1);
-
         obstacle_detected = false;
-        for (int i = start_index; i <= end_index; i++) {
-            if (msg->ranges[i] <= 0.2) {
+        for (int i = 0; i <= samples_per_angle; i++) {
+            std::cout << "Sensor value reading: " << msg->ranges[i] << std::endl;
+            if (msg->ranges[i] <= 0.5) {
                 obstacle_detected = true;
-                break;
+                return;
+            }
+        }
+        for (int i = num_ranges - samples_per_angle; i < num_ranges; i++) {
+            std::cout << "Sensor value reading: " << msg->ranges[i] << std::endl;
+            if (msg->ranges[i] <= 0.5) {
+                obstacle_detected = true;
+                return;
             }
         }
     }
